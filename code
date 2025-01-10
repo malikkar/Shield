@@ -162,13 +162,8 @@ def deployTeam(employees_new, employees_old, event_performance):
 
         return formatted_employees
 
-
-
 print(deployTeam([e1, e2], [e3, e4], 300)) # Print [Natasha Romanoff (233), Thor Odinson (430)]
 print(deployTeam([e1, e2], [e3, e4], 470)) # Print [Thor Odinson (430), Steven Rogers (123)]
-
-# почему-то выписывает [Natasha Romanoff (233), Thor Odinson (430)]
-print(deployTeam([e1, e2], [e3, e4], 240)) # Print [Natasha Romanoff (233), Steven Rogers (123)] 
-
-print(deployTeam([e1, e2], [e3, e4], 260)) # Print [Natasha Romanoff (233), Thor Odinson (430)]
+print(deployTeam([e1, e3], [e2, e4], 240)) # Print [Natasha Romanoff (233), Steven Rogers (123)] 
+print(deployTeam([e1, e3], [e2, e4], 260)) # Print [Natasha Romanoff (233), Thor Odinson (430)]
 print(deployTeam([e1, e2], [e3, e4], 1500)) # Print [Natasha Romanoff (233), Thor Odinson (430), Steven Rogers (123), Anthony Stark (444)]
