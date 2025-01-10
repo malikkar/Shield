@@ -1,0 +1,174 @@
+
+class Employee:
+    def __init__(self, id, name, surname, performance):
+        self.id = id
+        self.name = name
+        self.surname = surname
+        self.performance = performance
+
+e1 = Employee(12, "Natasha", "Romanoff", 233)
+e2 = Employee(32, "Thor", "Odinson", 430)
+e3 = Employee(1, "Steven", "Rogers", 123)
+e4 = Employee(20, "Anthony", "Stark", 444)
+employees =[e1, e2, e3, e4]
+
+    
+
+# N1
+def findBestEmployee(employees):
+    if employees:
+        best_employee = employees[0]
+        for employee in employees:
+            if employee.performance > best_employee.performance:
+                best_employee = employee
+    else:
+        return -1
+    return best_employee.id
+
+def getEmployee(employees, id):
+    for employee in employees:
+        if employee.id == id:
+            return f"{employee.name} {employee.surname} ({employee.performance})"
+    return None
+
+print(str(findBestEmployee([e1, e2, e3]))) # Print 32
+print(str(findBestEmployee([e1, e3]))) # Print 12
+print(str(findBestEmployee([e2, e3]))) # Print 32
+print(str(findBestEmployee([e1, e2, e3, e4]))) # Print 20
+print(str(findBestEmployee([e4, e1, e2, e3]))) # Print 20
+
+print(getEmployee(employees, 32)) # Print Thor Odinson (430)
+print(getEmployee(employees, 12)) # Print Natasha Romanoff (233)
+print(getEmployee(employees, 24)) # Print None
+
+# N2
+def removeEmployee(employees, id):
+    employee_to_remove = None
+    new_employees = employees.copy()
+    for employee in employees:
+        if employee.id == id:
+            employee_to_remove = employee
+    if employee_to_remove:
+        new_employees.remove(employee_to_remove)
+
+    # Форматирование списка сотрудников
+    formatted_employees = [
+        f"{employee.name} {employee.surname} ({employee.performance})"
+        for employee in new_employees
+    ]
+
+    return f"[{', '.join(formatted_employees)}]"
+
+print(removeEmployee(employees, 1)) # Print [Natasha Romanoff (233), Thor Odinson (430), Anthony Stark (444)]
+print(removeEmployee(employees, 32)) # Print [Natasha Romanoff (233), Steven Rogers (123), Anthony Stark (444)]
+
+# N3
+def sortEmployee(employees):
+    new_employees = [] 
+    while employees:
+        best = findBestEmployee(employees)
+       # best_employee = getEmployee(employees, best) - we cant write it because getEmployee is a string
+        best_employee = next((employee for employee in employees if employee.id == best), None)
+        if best_employee:
+            new_employees.append(best_employee)
+            employees.remove(best_employee)
+        else:
+            break
+
+# Форматирование списка сотрудников
+    formatted_employees = [
+        f"{employee.name} {employee.surname} ({employee.performance})"
+        for employee in new_employees
+    ]
+
+    return f"[{', '.join(formatted_employees)}]"
+
+print(sortEmployee([e4, e2, e1, e3])) # Print [Anthony Stark (444), Thor Odinson (430), Natasha Romanoff (233), Steven Rogers (123)]
+print(sortEmployee([e4, e1, e3])) # Print [Anthony Stark (444), Natasha Romanoff (233), Steven Rogers (123)]
+print(sortEmployee([e1])) # Print [Natasha Romanoff (233)]
+
+# N4
+
+def assemble(employees, capacity):
+    count_performance = sum(employee.performance for employee in employees)
+    if count_performance <= capacity:
+        return True
+    else:
+        return False
+
+
+print(assemble([e1, e2, e3], 20)) # Print False
+print(assemble([e1, e2, e3], 1500)) # Print True
+
+# N5
+
+def saveThem(employees, min_performance):
+    strong = [employee for employee in employees if employee.performance > min_performance]
+
+# Форматирование списка сотрудников
+    formatted_employees = [
+        f"{employee.name} {employee.surname} ({employee.performance})"
+        for employee in strong
+    ]
+
+    return f"[{', '.join(formatted_employees)}]"
+
+
+print(saveThem([e1, e2, e3], 20)) # Print [Natasha Romanoff (233), Steven Rogers (123)]
+print(saveThem([e1, e2, e3], 300)) # Print [Thor Odinson (430)]
+
+# N6
+
+def deployTeam(employees_new, employees_old, event_performance):
+    # Шаг 2: Разделить сложность действия на количество новых сотрудников
+    min_performance = event_performance / len(employees_new)
+    
+    # Шаг 3: Удалить сотрудников, чья производительность ниже минимальной
+    filtered_new_employees = [employee for employee in employees_new if employee.performance >= min_performance]
+    
+    # Шаг 4: Сложить производительность оставшихся новых сотрудников
+    total_performance = sum(employee.performance for employee in filtered_new_employees)
+    
+    # Если производительность достаточна, вернуть список новых сотрудников
+    if total_performance >= event_performance:
+
+        # Форматирование списка сотрудников
+        formatted_employees = [
+        f"{employee.name} {employee.surname} ({employee.performance})"
+        for employee in filtered_new_employees]
+
+        return formatted_employees
+
+    else:
+        # Шаг 5: Добавлять сотрудников из старой группы, пока производительность не станет достаточной
+        for employee in employees_old:
+            filtered_new_employees.append(employee)
+            total_performance += employee.performance
+            if total_performance >= event_performance:
+                # Форматирование списка сотрудников
+                formatted_employees = [
+                f"{employee.name} {employee.surname} ({employee.performance})"
+                for employee in filtered_new_employees]
+
+                return formatted_employees
+
+           
+        # Шаг 6: Если производительности все еще недостаточно, вернуть всех новых и старых сотрудников
+        full_team = employees_new + employees_old
+        # Форматирование списка сотрудников
+        formatted_employees = [
+        f"{employee.name} {employee.surname} ({employee.performance})"
+        for employee in full_team]
+
+        return formatted_employees
+
+
+
+print(deployTeam([e1, e2], [e3, e4], 300)) # Print [Natasha Romanoff (233), Thor Odinson (430)]
+print(deployTeam([e1, e2], [e3, e4], 470)) # Print [Thor Odinson (430), Steven Rogers (123)]
+
+# почему-то выписывает [Natasha Romanoff (233), Thor Odinson (430)]
+print(deployTeam([e1, e2], [e3, e4], 240)) # Print [Natasha Romanoff (233), Steven Rogers (123)] 
+
+print(deployTeam([e1, e2], [e3, e4], 260)) # Print [Natasha Romanoff (233), Thor Odinson (430)]
+print(deployTeam([e1, e2], [e3, e4], 1500)) # Print [Natasha Romanoff (233), Thor Odinson (430), Steven Rogers (123), Anthony Stark (444)]
